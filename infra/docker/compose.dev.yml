@@ -1,0 +1,12 @@
+services:
+  redis:
+    image: redis:latest
+    command: redis-server --protected-mode no
+    ports:
+      - "6379:6379"
+  elasticsearch:
+    image: elasticsearch:8.0.0
+    environment:
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"

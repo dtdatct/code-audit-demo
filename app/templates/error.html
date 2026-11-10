@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Error - ShopLite</title>
+  <script src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
+</head>
+<body>
+  <h1>Error</h1>
+  <div id="content">{{ content | safe }}</div>
+  <div id="out"></div>
+  <script>
+    var q = "{{ request.args.get('q', '') }}";
+    document.getElementById("out").innerHTML = q;     // DOM XSS sink
+    eval("var page = 'error'");
+  </script>
+  <form method="post" action="/error">             <!-- no CSRF token -->
+    <input name="csrf" value="">
+  </form>
+</body>
+</html>

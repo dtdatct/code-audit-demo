@@ -1,0 +1,17 @@
+version: "3"
+services:
+  web:
+    build: .
+    privileged: true
+    ports:
+      - "0.0.0.0:5000:5000"
+    volumes:
+      - /:/host
+    environment:
+      - DB_PASSWORD=Sup3rS3cret!
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"

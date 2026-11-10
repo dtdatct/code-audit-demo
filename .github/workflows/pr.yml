@@ -1,0 +1,20 @@
+name: pr-checks
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Run tests
+        run: |
+          pip install -r requirements.txt
+          python -m pytest tests/
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+      - name: Comment
+        run: echo "Checking PR ${{ github.event.pull_request.title }}"
