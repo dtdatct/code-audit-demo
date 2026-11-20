@@ -10,7 +10,12 @@ def login_bypass():
     u = request.form.get("username", "")
     p = request.form.get("password", "")
     conn = get_conn()
-    row = conn.execute("SELECT id, role FROM users WHERE username = '" + u + "' AND password = '" + p + "'").fetchone()
+    # Bound parameters: user input is data, never SQL syntax.
+    row = conn.execute(
+        "SELECT id, role FROM users WHERE username = ? AND password = ?",
+        (u, p),
+    ).fetchone()
     if row is None:
+        # One generic error for every failure: no account enumeration.
         return jsonify(error="invalid"), 401
     return jsonify(id=row["id"], role=row["role"])
